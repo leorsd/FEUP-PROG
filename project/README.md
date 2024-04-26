@@ -5,9 +5,9 @@
 
 Identify all group elements (numbers and names).
 
-- upXXXXX Name of element 1
-- upXXXXX Name of element 2
-- upXXXXX Name of element 3
+- up202306343 Leandro Filipe Pais Resende
+- up202306331 António Lourenço Gomes Barrote Rodrigues
+- up202306340 Gonçalo Miguel Ferreira Santos
 
 
 ## Accomplished tasks
