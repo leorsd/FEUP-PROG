@@ -28,8 +28,8 @@ namespace svg
 
     Circle::Circle(const Color &fill, 
                    const Point &center,
-                   const Point &radius)
-        : Ellipse(fill, center, radius)
+                   double radius)
+        : Ellipse(fill, center, Point(radius, radius))
     {
     }
     double Circle::get_radius() const

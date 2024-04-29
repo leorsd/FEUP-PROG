@@ -31,7 +31,7 @@ namespace svg
     {
     public:
         /**
-         * @brief Construct a new Ellipse object
+         * @brief Ellipse object constructor
          * 
          * @param fill 
          * @param center 
@@ -39,19 +39,19 @@ namespace svg
          */
         Ellipse(const Color &fill, const Point &center, const Point &radius);
         /**
-         * @brief Get the center object
+         * @brief Get the center
          * 
          * @return Point 
          */
         Point get_center() const;
         /**
-         * @brief Get the radius object
+         * @brief Get the radius
          * 
          * @return Point 
          */
         Point get_radius() const;
         /**
-         * @brief 
+         * @brief draw the Ellipse
          * 
          * @param img 
          */
@@ -67,21 +67,21 @@ namespace svg
     {
     public:
         /**
-         * @brief Construct a new Circle object
+         * @brief Circle object constructor
          * 
          * @param fill 
          * @param center 
          * @param radius 
          */
-        Circle(const Color &fill, const Point &center, const Point &radius);
+        Circle(const Color &fill, const Point &center, double radius);
         /**
-         * @brief Get the radius object
+         * @brief Get the radius
          * 
          * @return double 
          */
         double get_radius() const;
         /**
-         * @brief 
+         * @brief draw the Circle
          * 
          * @param img 
          */
