@@ -20,4 +20,30 @@ namespace svg
     // @todo provide the implementation of SVGElement derived classes
     // HERE -->
 
+    Polyline::Polyline(const Color &stroke,
+                       const std::vector<Point> &points)
+                     : stroke(stroke), points(points)
+    {
+    }
+
+    void Polyline::draw(PNGImage &img) const
+    {   
+        if (points.size() >= 2)
+        {
+            const Point * initial_point = &points[0];
+            for (size_t i = 1; i < points.size(); i++)
+            {
+                const Point * const next_point = &points[i];
+                img.draw_line(*initial_point, *next_point, stroke);
+                initial_point = next_point;
+            }
+        }
+    }
+
+    Line::Line(const Color &stroke,
+               const Point &start,
+               const Point &end)
+             : Polyline(stroke, {start, end})
+    {
+    }
 }
