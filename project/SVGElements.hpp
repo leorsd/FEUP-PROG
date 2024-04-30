@@ -102,6 +102,15 @@ namespace svg
          * @param img destination PNGImage
          */
         void draw(PNGImage &img) const override;
+
+        /**
+         * @brief Get the width and height of the rectangle
+         * 
+         * @return Point containing the width and height of the rectangle
+         */
+        Point get_width_and_height() const {return width_and_height;}
+    private:
+        Point width_and_height;
     };
 }
 #endif

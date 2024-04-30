@@ -41,7 +41,7 @@ namespace svg
                 left_top_corner.translate(Point{width_and_height.x, 0}), 
                 left_top_corner.translate(Point{width_and_height.x, width_and_height.y}), 
                 left_top_corner.translate(Point{0, width_and_height.y})}, 
-                fill_color)
+                fill_color), width_and_height(width_and_height)
     {
     }
 
