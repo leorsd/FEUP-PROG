@@ -36,10 +36,7 @@ namespace svg
     {
         return radius.x;
     }
-    void Circle::draw(PNGImage &img) const
-    {
-        img.draw_ellipse(center, radius, fill);
-    }
+
     // @todo provide the implementation of SVGElement derived classes
     // HERE -->
 
@@ -93,10 +90,5 @@ namespace svg
                 left_top_corner.translate(Point{0, width_and_height.y})}, 
                 fill_color), width_and_height(width_and_height)
     {
-    }
-
-    void Rect::draw(PNGImage &img) const
-    {
-        img.draw_polygon(get_points(), get_fill_color());
     }
 }
