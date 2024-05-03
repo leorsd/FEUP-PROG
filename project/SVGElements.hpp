@@ -5,16 +5,23 @@
 #include "Color.hpp"
 #include "Point.hpp"
 #include "PNGImage.hpp"
+#include <string>
 
 namespace svg
 {
     class SVGElement
     {
-
     public:
         SVGElement();
+        SVGElement(const std::string &id);
+        std::string get_id() const {return id;}
         virtual ~SVGElement();
         virtual void draw(PNGImage &img) const = 0;
+        virtual void translate(const Point &dir);
+        virtual void rotate(const Point &origin, int degrees);
+        virtual void scale(const Point &origin, int factor);
+    private:
+        std::string id;
     };
 
     // Declaration of namespace functions
