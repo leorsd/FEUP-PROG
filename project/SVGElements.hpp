@@ -28,7 +28,7 @@ namespace svg
                  const std::string &png_file);
 
     /**
-     * @brief Implementation of the Ellipse class
+     * @brief Declaration of the Ellipse class
      * 
      */
     class Ellipse : public SVGElement
@@ -42,7 +42,18 @@ namespace svg
          * @param radius radius of the ellipse (X-axis and Y-axis)
          */
         Ellipse(const Color &fill, const Point &center, const Point &radius);
-
+        /**
+         * @brief Get the center
+         * 
+         * @return Point 
+         */
+        Point get_center() const;
+        /**
+         * @brief Get the radius
+         * 
+         * @return Point 
+         */
+        Point get_radius() const;
         /**
          * @brief Draw the ellipse on the PNG image
          * 
@@ -55,9 +66,38 @@ namespace svg
         Point center;
         Point radius;
     };
+  
+      /**
+     * @brief Declaration of the Circle class (subclass of Ellipse)
+     * 
+     */
+    Class Circle : public Ellipse
+    {
+    public:
+        /**
+         * @brief Circle object constructor
+         * 
+         * @param fill color of the circle
+         * @param center coordinates of the circle's center
+         * @param radius of the circle
+         */
+        Circle(const Color &fill, const Point &center, double radius);
+        /**
+         * @brief Get the radius
+         * 
+         * @return double
+         */
+        double get_radius() const;
+        /**
+         * @brief draw the Circle
+         * 
+         * @param img destination
+         */
+        void draw(PNGImage &img) const override;
+     };
 
     /**
-     * @brief Implementation of the Polyline class
+     * @brief Declaration of the Polyline class
      * 
      */
     class Polyline : public SVGElement
@@ -98,7 +138,7 @@ namespace svg
     };
 
     /**
-     * @brief Implementation of the Line class (subclass of Polyline)
+     * @brief Declaration of the Line class (subclass of Polyline)
      * 
      */
     class Line : public Polyline
@@ -134,6 +174,7 @@ namespace svg
          * @return Last Point in the vector
          */
         const Point get_final_point() const { return get_points().back(); }
+
     };
 }
 #endif
