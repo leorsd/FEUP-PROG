@@ -2,8 +2,8 @@
 
 namespace svg
 {
-    // These must be defined!
-    SVGElement::SVGElement() {}
+    SVGElement::SVGElement():id("undefined") {}
+    SVGElement::SVGElement(const std::string &id):id(id) {} 
     SVGElement::~SVGElement() {}
 
     // Ellipse (initial code provided)
