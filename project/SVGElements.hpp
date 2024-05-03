@@ -88,12 +88,6 @@ namespace svg
          * @return double
          */
         double get_radius() const;
-        /**
-         * @brief draw the Circle
-         * 
-         * @param img destination
-         */
-        void draw(PNGImage &img) const override;
      };
 
     /**
@@ -155,13 +149,6 @@ namespace svg
         Line(const Color &stroke, const Point &start, const Point &end);
 
         /**
-         * @brief Draw the Line on the PNG image
-         * 
-         * @param img destination PNG image
-         */
-        void draw(PNGImage &img) const override;
-
-        /**
          * @brief Get the initial Point
          * 
          * @return First Point in the vector
@@ -175,6 +162,73 @@ namespace svg
          */
         const Point get_final_point() const { return get_points().back(); }
 
+    };
+
+    /**
+     * @brief Implementation of Polygon class
+     * 
+     */
+    class Polygon : public SVGElement
+    {
+    public:
+        /**
+         * @brief Construct a new Polygon object   
+         * 
+         * @param points vector of points in the polygon
+         * @param fill_color color of the polygon
+         */
+        Polygon(const std::vector<Point> &points, const Color &fill_color);
+        
+        /**
+         * @brief Draw the polygon on the PNG image
+         * 
+         * @param img destinatiton PNGImage 
+         */
+        void draw(PNGImage &img) const override;
+
+        /**
+         * @brief Get the points of the polygon
+         * 
+         * @return std::vector<Point> containing the Polygon's points
+         */
+        const std::vector<Point> get_points() const {return points;}
+
+        /**
+         * @brief Get the color of the polygon
+         * 
+         * @return Color object
+         */
+        const Color get_fill_color() const {return fill_color;}
+
+    private:
+        std::vector<Point> points;
+        Color fill_color;
+    };
+
+    /**
+     * @brief Implementation of Rectangle class (subclass of Polygon)
+     * 
+     */
+    class Rect : public Polygon
+    {
+    public:
+        /**
+         * @brief Construct a new Rect object
+         * 
+         * @param left_top_corner Point representing the top left corner of the rectangle
+         * @param fill_color Color of the rectangle
+         * @param width_and_height Point representing the width and height of the rectangle (width, height)
+         */
+        Rect(const Point &left_top_corner, const Color &fill_color, const Point &width_and_height);
+
+        /**
+         * @brief Get the width and height of the rectangle
+         * 
+         * @return Point containing the width and height of the rectangle
+         */
+        Point get_width_and_height() const {return width_and_height;}
+    private:
+        Point width_and_height;
     };
 }
 #endif
