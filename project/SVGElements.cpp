@@ -17,6 +17,29 @@ namespace svg
     {
         img.draw_ellipse(center, radius, fill);
     }
+    Point Ellipse::get_center() const
+    {
+        return center;
+    }
+    Point Ellipse::get_radius() const
+    {
+        return radius;
+    }
+
+    Circle::Circle(const Color &fill, 
+                   const Point &center,
+                   double radius)
+        : Ellipse(fill, center, Point(radius, radius))
+    {
+    }
+    double Circle::get_radius() const
+    {
+        return radius.x;
+    }
+    void Circle::draw(PNGImage &img) const
+    {
+        img.draw_ellipse(center, radius, fill);
+    }
     // @todo provide the implementation of SVGElement derived classes
     // HERE -->
 

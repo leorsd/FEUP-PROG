@@ -30,13 +30,62 @@ namespace svg
     class Ellipse : public SVGElement
     {
     public:
+        /**
+         * @brief Ellipse object constructor
+         * 
+         * @param fill 
+         * @param center 
+         * @param radius 
+         */
         Ellipse(const Color &fill, const Point &center, const Point &radius);
+        /**
+         * @brief Get the center
+         * 
+         * @return Point 
+         */
+        Point get_center() const;
+        /**
+         * @brief Get the radius
+         * 
+         * @return Point 
+         */
+        Point get_radius() const;
+        /**
+         * @brief draw the Ellipse
+         * 
+         * @param img 
+         */
         void draw(PNGImage &img) const override;
 
     private:
         Color fill;
         Point center;
         Point radius;
+    };
+
+    Class Circle : public Ellipse
+    {
+    public:
+        /**
+         * @brief Circle object constructor
+         * 
+         * @param fill 
+         * @param center 
+         * @param radius 
+         */
+        Circle(const Color &fill, const Point &center, double radius);
+        /**
+         * @brief Get the radius
+         * 
+         * @return double 
+         */
+        double get_radius() const;
+        /**
+         * @brief draw the Circle
+         * 
+         * @param img 
+         */
+        void draw(PNGImage &img) const override;
     };
 }
 #endif
