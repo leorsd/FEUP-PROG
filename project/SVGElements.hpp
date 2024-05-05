@@ -9,30 +9,80 @@
 
 namespace svg
 {
+    void readSVG(const std::string &svg_file,
+                 Point &dimensions,
+                 std::vector<SVGElement *> &svg_elements);
+
+    void convert(const std::string &svg_file,
+                 const std::string &png_file);
+
+    /**
+     * @brief Declaration of the SVGElement class
+     * 
+     */
     class SVGElement
     {
     public:
+        /**
+         * @brief Construct a new SVGElement object
+         * 
+         */
         SVGElement();
+
+        /**
+         * @brief Construct a new SVGElement object
+         * 
+         * @param id string representing the id of the SVGElement
+         */
         SVGElement(const std::string &id);
+
+        /**
+         * @brief Get the id of the SVGElement
+         * 
+         * @return string containing the id of the SVGElement
+         */
         std::string get_id() const {return id;}
+
+        /**
+         * @brief Destroy the SVGElement object
+         * 
+         */
         virtual ~SVGElement();
+
+        /**
+         * @brief Draw the SVGElement on the PNG image
+         * 
+         * @param img destination PNG image
+         */
         virtual void draw(PNGImage &img) const = 0;
-        virtual void translate(const Point &dir);
-        virtual void rotate(const Point &origin, int degrees);
-        virtual void scale(const Point &origin, int factor);
+
+        /**
+         * @brief Translate the SVGElement
+         * 
+         * @param dir Point representing the X and Y axes units of the translation (x,y)
+         */
+        virtual void translate(const Point &dir) = 0;
+
+        /**
+         * @brief Rotate the SVGElement
+         * 
+         * @param origin Point representing the origin of the rotation
+         * @param degrees int representing the degrees of the rotation
+         */
+        virtual void rotate(const Point &origin, int degrees) = 0;
+
+        /**
+         * @brief Scale the SVGElement
+         * 
+         * @param origin Point representing the origin of the scaling
+         * @param factor int representing the factor of the scaling
+         */
+        virtual void scale(const Point &origin, int factor) = 0;
+
     private:
         std::string id;
     };
 
-    // Declaration of namespace functions
-    // readSVG -> implement it in readSVG.cpp
-    // convert -> already given (DO NOT CHANGE) in convert.cpp
-
-    void readSVG(const std::string &svg_file,
-                 Point &dimensions,
-                 std::vector<SVGElement *> &svg_elements);
-    void convert(const std::string &svg_file,
-                 const std::string &png_file);
 
     /**
      * @brief Declaration of the Ellipse class
@@ -41,6 +91,7 @@ namespace svg
     class Ellipse : public SVGElement
     {
     public:
+
         /**
          * @brief Construct a new Ellipse object
          * 
@@ -49,18 +100,21 @@ namespace svg
          * @param radius radius of the ellipse (X-axis and Y-axis)
          */
         Ellipse(const Color &fill, const Point &center, const Point &radius);
+
         /**
          * @brief Get the center
          * 
          * @return Point 
          */
         Point get_center() const;
+
         /**
          * @brief Get the radius
          * 
          * @return Point 
          */
         Point get_radius() const;
+
         /**
          * @brief Draw the ellipse on the PNG image
          * 
@@ -68,19 +122,27 @@ namespace svg
          */
         void draw(PNGImage &img) const override;
 
+        /**
+         * @brief Translate the ellipse
+         * 
+         * @param dir Point representing the X and Y axes units of the translation (x,y)
+         */
+        void translate(const Point &dir) override;
+
     private:
         Color fill;
         Point center;
         Point radius;
     };
   
-      /**
+    /**
      * @brief Declaration of the Circle class (subclass of Ellipse)
      * 
      */
-    Class Circle : public Ellipse
+    class Circle : public Ellipse
     {
     public:
+
         /**
          * @brief Circle object constructor
          * 
@@ -88,14 +150,9 @@ namespace svg
          * @param center coordinates of the circle's center
          * @param radius of the circle
          */
-        Circle(const Color &fill, const Point &center, double radius);
-        /**
-         * @brief Get the radius
-         * 
-         * @return double
-         */
-        double get_radius() const;
+        Circle(const Color &fill, const Point &center, int radius);
      };
+
 
     /**
      * @brief Declaration of the Polyline class
@@ -104,6 +161,7 @@ namespace svg
     class Polyline : public SVGElement
     {
     public:
+
         /**
          * @brief Construct a new Polyline object
          * 
@@ -132,6 +190,13 @@ namespace svg
          * @return Color object
          */
         const Color& get_stroke() const { return stroke; }
+
+        /**
+         * @brief Translate the polyline
+         * 
+         * @param dir Point representing the X and Y axes units of the translation (x,y)
+         */
+        void translate(const Point &dir) override;
 
     private:
         Color stroke;
@@ -171,6 +236,7 @@ namespace svg
 
     };
 
+
     /**
      * @brief Implementation of Polygon class
      * 
@@ -206,6 +272,13 @@ namespace svg
          * @return Color object
          */
         const Color get_fill_color() const {return fill_color;}
+
+        /**
+         * @brief Translate the polygon
+         * 
+         * @param dir Point representing the X and Y axes units of the translation (x,y)
+         */
+        void translate(const Point &dir) override;
 
     private:
         std::vector<Point> points;
