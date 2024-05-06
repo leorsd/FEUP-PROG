@@ -129,6 +129,22 @@ namespace svg
          */
         void translate(const Point &dir) override;
 
+        /**
+         * @brief Rotate the ellipse
+         * 
+         * @param origin Point representing the origin of the rotation
+         * @param degrees Integer representing the degrees of the rotation
+         */
+        void rotate(const Point &origin, int degrees) override;
+
+        /**
+         * @brief Scale the ellipse
+         * 
+         * @param origin Point representing the origin of the scaling
+         * @param factor Integer representing the factor of the scaling
+         */
+        void scale(const Point &origin, int factor) override;
+
     private:
         Color fill;
         Point center;
@@ -197,6 +213,16 @@ namespace svg
          * @param dir Point representing the X and Y axes units of the translation (x,y)
          */
         void translate(const Point &dir) override;
+
+        /**
+         * @brief Rotate the polyline
+         * 
+         * @param origin Point representing the origin of the rotation
+         * @param degrees Integer representing the degrees of the rotation
+         */
+        void rotate(const Point &origin, int degrees) override;
+
+
 
     private:
         Color stroke;
@@ -279,6 +305,22 @@ namespace svg
          * @param dir Point representing the X and Y axes units of the translation (x,y)
          */
         void translate(const Point &dir) override;
+
+        /**
+         * @brief Rotate the polygon
+         * 
+         * @param origin Point representing the origin of the rotation
+         * @param degrees Integer representing the degrees of the rotation
+         */
+        void rotate(const Point &origin, int degrees) override;
+
+        /**
+         * @brief Scale the polygon
+         * 
+         * @param origin Point representing the origin of the scaling
+         * @param factor Integer representing the factor of the scaling
+         */
+        void scale(const Point &origin, int factor) override;
 
     private:
         std::vector<Point> points;

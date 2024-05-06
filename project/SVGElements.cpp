@@ -37,6 +37,17 @@ namespace svg
         center = center.translate(dir);
     }
 
+    void Ellipse::rotate(const Point &origin, int degrees)
+    {
+        center = center.rotate(origin, degrees);
+    }
+
+    void Ellipse::scale(const Point &origin, int factor)
+    {
+        center = center.scale(origin, factor);
+        radius = radius.scale(Point{0,0}, factor);
+    }
+
     // Circle
     Circle::Circle(const Color &fill, 
                    const Point &center,
@@ -74,6 +85,14 @@ namespace svg
         }
     }
 
+    void Polyline::rotate(const Point &origin, int degrees)
+    {
+        for (Point &p:points)
+        {
+            p=p.rotate(origin, degrees);
+        }
+    }
+
     // Line
     Line::Line(const Color &stroke,
                const Point &start,
@@ -99,6 +118,22 @@ namespace svg
         for (Point &p:points)
         {
             p=p.translate(dir);
+        }
+    }
+
+    void Polygon::rotate(const Point &origin, int degrees)
+    {
+        for (Point &p:points)
+        {
+            p=p.rotate(origin, degrees);
+        }
+    }
+
+    void Polygon::scale(const Point &origin, int factor)
+    {
+        for (Point &p:points)
+        {
+            p=p.scale(origin, factor);
         }
     }
 
