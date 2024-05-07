@@ -3,17 +3,15 @@
 namespace svg
 {   
     // SVGElement
-    SVGElement::SVGElement():id("undefined") {}
+    SVGElement::SVGElement(): fill(Color{0,0,0}), id("undefined") {}
 
-    SVGElement::SVGElement(const std::string &id):id(id) {} 
+    SVGElement::SVGElement(const Color &fill, const std::string &id): fill(fill), id(id) {} 
 
     SVGElement::~SVGElement() {}
 
-    // Ellipse
-    Ellipse::Ellipse(const Color &fill,
-                     const Point &center,
-                     const Point &radius)
-        : fill(fill), center(center), radius(radius)
+    Ellipse::Ellipse(const Point &center, const Point &radius,
+                     const Color &fill, const std::string &id)
+                : SVGElement(fill, id), center(center), radius(radius)
     {
     }
 
@@ -49,17 +47,19 @@ namespace svg
     }
 
     // Circle
-    Circle::Circle(const Color &fill, 
-                   const Point &center,
-                   int radius)
-        : Ellipse(fill, center, Point{radius, radius})
+    Circle::Circle(const Point &center,
+                   int radius,
+                   const Color &fill, 
+                   const std::string &id)
+        : Ellipse(center, Point{radius, radius}, fill, id)
     {
     }
     
-    // Polyline
-    Polyline::Polyline(const Color &stroke,
-                       const std::vector<Point> &points)
-                     : stroke(stroke), points(points)
+
+    Polyline::Polyline(const std::vector<Point> &points,
+                       const Color &stroke,
+                       const std::string &id )
+                    :  SVGElement(stroke, id), points(points)
     {
     }
 
@@ -94,17 +94,19 @@ namespace svg
     }
 
     // Line
-    Line::Line(const Color &stroke,
-               const Point &start,
-               const Point &end)
-             : Polyline(stroke, {start, end})
+    Line::Line(const Point &start,
+               const Point &end,
+               const Color &stroke,
+               const std::string &id)
+             : Polyline({start, end}, stroke, id)
     {
     }
 
     // Polygon
     Polygon::Polygon(const std::vector<Point> &points, 
-                     const Color &fill)
-        : points(points), fill_color(fill)
+                     const Color &fill,
+                     const std::string &id)
+        : SVGElement(fill_color, id), points(points)
     {
     }
 
@@ -140,13 +142,15 @@ namespace svg
 
     // Rect
     Rect::Rect(const Point &left_top_corner, 
-            const Color &fill_color, 
-            const Point &width_and_height)
+            const Point &width_and_height,
+            const Color &fill_color,
+            const std::string &id)
         : Polygon({left_top_corner, 
                 left_top_corner.translate(Point{width_and_height.x, 0}), 
                 left_top_corner.translate(Point{width_and_height.x, width_and_height.y}), 
                 left_top_corner.translate(Point{0, width_and_height.y})}, 
-                fill_color), width_and_height(width_and_height)
+                fill_color, id),
+        width_and_height(width_and_height)
     {
     }
 }

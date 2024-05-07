@@ -34,7 +34,7 @@ namespace svg
          * 
          * @param id string representing the id of the SVGElement
          */
-        SVGElement(const std::string &id);
+        SVGElement(const Color &fill, const std::string &id);
 
         /**
          * @brief Get the id of the SVGElement
@@ -80,6 +80,7 @@ namespace svg
         virtual void scale(const Point &origin, int factor) = 0;
 
     private:
+        Color fill;
         std::string id;
     };
 
@@ -99,7 +100,8 @@ namespace svg
          * @param center coordinates of the center of the ellipse
          * @param radius radius of the ellipse (X-axis and Y-axis)
          */
-        Ellipse(const Color &fill, const Point &center, const Point &radius);
+        Ellipse(const Point &center, const Point &radius, 
+        const Color &fill = Color{0,0,0}, const std::string &id = "undefined");
 
         /**
          * @brief Get the center
@@ -166,7 +168,7 @@ namespace svg
          * @param center coordinates of the circle's center
          * @param radius of the circle
          */
-        Circle(const Color &fill, const Point &center, int radius);
+        Circle(const Point &center, int radius, const Color &fill = Color{0,0,0}, const std::string &id = "undefined");
      };
 
 
@@ -184,7 +186,7 @@ namespace svg
          * @param stroke color of the polyline
          * @param points vector of points in the polyline
          */
-        Polyline(const Color &stroke, const std::vector<Point> &points);
+        Polyline(const std::vector<Point> &points, const Color &stroke = Color{0,0,0}, const std::string &id = "undefined");
 
         /**
          * @brief Draw the polyline on the PNG image
@@ -244,7 +246,7 @@ namespace svg
          * @param start starting point of the line (XY coordinates)
          * @param end ending point of the line (XY coordinates)
          */
-        Line(const Color &stroke, const Point &start, const Point &end);
+        Line(const Point &start, const Point &end, const Color &stroke = Color{0,0,0}, const std::string &id = "undefined");
 
         /**
          * @brief Get the initial Point
@@ -276,7 +278,7 @@ namespace svg
          * @param points vector of points in the polygon
          * @param fill_color color of the polygon
          */
-        Polygon(const std::vector<Point> &points, const Color &fill_color);
+        Polygon(const std::vector<Point> &points, const Color &fill_color = Color{0,0,0}, const std::string &id = "undefined");
         
         /**
          * @brief Draw the polygon on the PNG image
@@ -341,7 +343,7 @@ namespace svg
          * @param fill_color Color of the rectangle
          * @param width_and_height Point representing the width and height of the rectangle (width, height)
          */
-        Rect(const Point &left_top_corner, const Color &fill_color, const Point &width_and_height);
+        Rect(const Point &left_top_corner, const Point &width_and_height, const Color &fill_color = Color{0,0,0}, const std::string &id = "undefined");
 
         /**
          * @brief Get the width and height of the rectangle
