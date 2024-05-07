@@ -54,7 +54,6 @@ namespace svg
         : Ellipse(center, Point{radius, radius}, fill, id)
     {
     }
-    
 
     Polyline::Polyline(const std::vector<Point> &points,
                        const Color &stroke,
@@ -71,7 +70,7 @@ namespace svg
             for (size_t i = 1; i < points.size(); i++)
             {
                 const Point * const next_point = &points[i];
-                img.draw_line(*initial_point, *next_point, stroke);
+                img.draw_line(*initial_point, *next_point, fill);
                 initial_point = next_point;
             }
         }
@@ -106,13 +105,13 @@ namespace svg
     Polygon::Polygon(const std::vector<Point> &points, 
                      const Color &fill,
                      const std::string &id)
-        : SVGElement(fill_color, id), points(points)
+        : SVGElement(fill, id), points(points)
     {
     }
 
     void Polygon::draw(PNGImage &img) const
     {
-        img.draw_polygon(points,fill_color);
+        img.draw_polygon(points,fill);
     }
 
     void Polygon::translate(const Point &dir)
@@ -152,5 +151,42 @@ namespace svg
                 fill_color, id),
         width_and_height(width_and_height)
     {
+    }
+
+    Group::Group(const std::vector<SVGElement*> &elements, const std::string &id)
+        : SVGElement(Color{0,0,0}, id), elements(elements)
+    {
+    }
+
+    void Group::draw(PNGImage &img) const {
+        for (const SVGElement *element: elements)
+        {
+            element->draw(img);
+        }
+    }
+
+    void Group::translate(const Point &dir) {
+        for (SVGElement *element: elements)
+        {
+            element->translate(dir);
+        }
+    }
+
+    void Group::rotate(const Point &origin, int degrees) {
+        for (SVGElement *element: elements)
+        {
+            element->rotate(origin, degrees);
+        }
+    }
+
+    void Group::scale(const Point &origin, int factor) {
+        for (SVGElement *element: elements)
+        {
+            element->scale(origin, factor);
+        }
+    }
+
+    void Group::add_element(SVGElement *element) {
+        elements.push_back(element);
     }
 }

@@ -32,6 +32,7 @@ namespace svg
         /**
          * @brief Construct a new SVGElement object
          * 
+         * @param fill color of the SVGElement
          * @param id string representing the id of the SVGElement
          */
         SVGElement(const Color &fill, const std::string &id);
@@ -42,6 +43,13 @@ namespace svg
          * @return string containing the id of the SVGElement
          */
         std::string get_id() const {return id;}
+
+        /**
+         * @brief Get the fill color of the SVGElement
+         * 
+         * @return Color object containing the fill color of the SVGElement
+         */
+        Color get_fill() const {return fill;}
 
         /**
          * @brief Destroy the SVGElement object
@@ -79,7 +87,7 @@ namespace svg
          */
         virtual void scale(const Point &origin, int factor) = 0;
 
-    private:
+    protected:
         Color fill;
         std::string id;
     };
@@ -96,9 +104,10 @@ namespace svg
         /**
          * @brief Construct a new Ellipse object
          * 
-         * @param fill color of the ellipse
          * @param center coordinates of the center of the ellipse
          * @param radius radius of the ellipse (X-axis and Y-axis)
+         * @param fill color of the ellipse
+         * @param id string representing the id of the ellipse
          */
         Ellipse(const Point &center, const Point &radius, 
         const Color &fill = Color{0,0,0}, const std::string &id = "undefined");
@@ -148,7 +157,6 @@ namespace svg
         void scale(const Point &origin, int factor) override;
 
     private:
-        Color fill;
         Point center;
         Point radius;
     };
@@ -164,12 +172,13 @@ namespace svg
         /**
          * @brief Circle object constructor
          * 
-         * @param fill color of the circle
          * @param center coordinates of the circle's center
          * @param radius of the circle
+         * @param fill color of the circle
+         * @param id string representing the id of the circle
          */
         Circle(const Point &center, int radius, const Color &fill = Color{0,0,0}, const std::string &id = "undefined");
-     };
+    };
 
 
     /**
@@ -183,17 +192,11 @@ namespace svg
         /**
          * @brief Construct a new Polyline object
          * 
-         * @param stroke color of the polyline
          * @param points vector of points in the polyline
+         * @param stroke color of the polyline
+         * @param id string representing the id of the polyline
          */
         Polyline(const std::vector<Point> &points, const Color &stroke = Color{0,0,0}, const std::string &id = "undefined");
-
-        /**
-         * @brief Draw the polyline on the PNG image
-         * 
-         * @param img destination PNG image
-         */
-        void draw(PNGImage &img) const override;
 
         /**
          * @brief Get the points of the polyline
@@ -203,11 +206,11 @@ namespace svg
         const std::vector<Point>& get_points() const { return points; }
 
         /**
-         * @brief Get the Color of the Polyline
+         * @brief Draw the polyline on the PNG image
          * 
-         * @return Color object
+         * @param img destination PNG image
          */
-        const Color& get_stroke() const { return stroke; }
+        void draw(PNGImage &img) const override;
 
         /**
          * @brief Translate the polyline
@@ -224,11 +227,9 @@ namespace svg
          */
         void rotate(const Point &origin, int degrees) override;
 
-
-
-    private:
-        Color stroke;
+    protected:
         std::vector<Point> points;
+        int width = 1;
     };
 
     /**
@@ -242,9 +243,10 @@ namespace svg
         /**
          * @brief Construct a new Line object
          * 
-         * @param stroke color of the line
          * @param start starting point of the line (XY coordinates)
          * @param end ending point of the line (XY coordinates)
+         * @param stroke color of the line
+         * @param id string representing the id of the line
          */
         Line(const Point &start, const Point &end, const Color &stroke = Color{0,0,0}, const std::string &id = "undefined");
 
@@ -253,15 +255,14 @@ namespace svg
          * 
          * @return First Point in the vector
          */
-        const Point get_initial_point() const { return *(get_points().begin()); }
+        const Point get_initial_point() const { return points.front(); }
 
         /**
          * @brief Get the final Point
          * 
          * @return Last Point in the vector
          */
-        const Point get_final_point() const { return get_points().back(); }
-
+        const Point get_final_point() const { return points.back(); }
     };
 
 
@@ -277,6 +278,7 @@ namespace svg
          * 
          * @param points vector of points in the polygon
          * @param fill_color color of the polygon
+         * @param id string representing the id of the polygon
          */
         Polygon(const std::vector<Point> &points, const Color &fill_color = Color{0,0,0}, const std::string &id = "undefined");
         
@@ -293,13 +295,6 @@ namespace svg
          * @return std::vector<Point> containing the Polygon's points
          */
         const std::vector<Point> get_points() const {return points;}
-
-        /**
-         * @brief Get the color of the polygon
-         * 
-         * @return Color object
-         */
-        const Color get_fill_color() const {return fill_color;}
 
         /**
          * @brief Translate the polygon
@@ -326,7 +321,6 @@ namespace svg
 
     private:
         std::vector<Point> points;
-        Color fill_color;
     };
 
     /**
@@ -340,8 +334,9 @@ namespace svg
          * @brief Construct a new Rect object
          * 
          * @param left_top_corner Point representing the top left corner of the rectangle
-         * @param fill_color Color of the rectangle
          * @param width_and_height Point representing the width and height of the rectangle (width, height)
+         * @param fill_color Color of the rectangle
+         * @param id string representing the id of the rectangle
          */
         Rect(const Point &left_top_corner, const Point &width_and_height, const Color &fill_color = Color{0,0,0}, const std::string &id = "undefined");
 
@@ -353,6 +348,61 @@ namespace svg
         Point get_width_and_height() const {return width_and_height;}
     private:
         Point width_and_height;
+    };
+
+    /**
+     * @brief Declaration of the Group class
+     * 
+     */
+    class Group : public SVGElement
+    {
+        public : 
+            /**
+             * @brief Construct a new Group object
+             * 
+             * @param elements vector og SVGElements
+             * @param id string representing the id of the group
+             */
+            Group(const std::vector<SVGElement *> &elements = {}, const std::string &id = "undefined");
+
+            /**
+             * @brief Draw all elements in the group on the PNG image
+             * 
+             * @param img destination PNG image
+             */
+            void draw(PNGImage &img) const override;
+
+            /**
+             * @brief Translate all elements in the group
+             * 
+             * @param dir Point representing the X and Y coordinates of the translation (x,y)
+             */
+            void translate(const Point &dir) override;
+
+            /**
+             * @brief Rotate all elements in the group
+             * 
+             * @param origin Point representing the origin of the rotation
+             * @param degrees Integer representing the degrees of the rotation
+             */
+            void rotate(const Point &origin, int degrees) override;
+
+            /**
+             * @brief Scale all elements in the group
+             * 
+             * @param origin Point representing the origin of the scaling
+             * @param factor Integer representing the factor of the scaling
+             */
+            void scale(const Point &origin, int factor) override;
+
+            /**
+             * @brief Add an element to the group
+             * 
+             * @param element SVGElement to be added to the group
+             */
+            void add_element(SVGElement *element);
+        private:
+            std::vector<SVGElement *> elements;
     };
 }
 #endif
