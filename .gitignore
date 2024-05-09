@@ -4,4 +4,5 @@
 /project/svgtopng
 /project/test
 /project/output/*
-project/xmldump
+/project/xmldump
+/project/external/tinyxml2/*.o
