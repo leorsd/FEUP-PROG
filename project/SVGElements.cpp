@@ -1,5 +1,4 @@
 #include "SVGElements.hpp"
-
 namespace svg
 {   
     // SVGElement
@@ -92,6 +91,14 @@ namespace svg
         }
     }
 
+    void Polyline::scale(const Point &origin, int factor)
+    {
+        for (Point &p:points)
+        {
+            p=p.scale(origin, factor);
+        }
+    }
+
     // Line
     Line::Line(const Point &start,
                const Point &end,
@@ -107,6 +114,7 @@ namespace svg
                      const std::string &id)
         : SVGElement(fill, id), points(points)
     {
+            std::cout<<points.size()<<std::endl;
     }
 
     void Polygon::draw(PNGImage &img) const
