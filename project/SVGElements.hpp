@@ -6,12 +6,14 @@
 #include "Point.hpp"
 #include "PNGImage.hpp"
 #include <string>
+#include <iostream>
 
 namespace svg
 {
+    class SVGElement;
     void readSVG(const std::string &svg_file,
                  Point &dimensions,
-                 std::vector<SVGElement *> &svg_elements);
+                 std::vector<svg::SVGElement *> &svg_elements);
 
     void convert(const std::string &svg_file,
                  const std::string &png_file);

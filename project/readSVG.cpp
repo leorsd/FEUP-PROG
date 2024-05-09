@@ -40,8 +40,8 @@ namespace svg
             if (element_name == "polygon")
             {
                 string points_str = child->Attribute("points");
-                istringstream iss(points_str);
                 replace(points_str.begin(), points_str.end(), ',', ' ');
+                istringstream iss(points_str);
                 vector<Point> points;
                 Point p;
                 while (iss >> p.x >> p.y)
@@ -49,7 +49,7 @@ namespace svg
                     points.push_back(p);
                 }
                 Color fill_color=parse_color(child->Attribute("fill"));
-                SVGElement* svg_element = new Polygon(points,fill_color,id);
+                svg_element = new Polygon(points,fill_color,id);
             }
             else if (element_name == "rect")
             {
@@ -58,9 +58,9 @@ namespace svg
                 top_left.y = child->IntAttribute("y");
                 int width = child->IntAttribute("width");
                 int height = child->IntAttribute("height");
-                Point width_and_height={width,height};
+                Point width_and_height={width-1,height-1};
                 Color fill_color=parse_color(child->Attribute("fill"));
-                SVGElement* svg_element = new Rectangle(top_left, width_and_height, fill_color,id);
+                svg_element = new Rect(top_left, width_and_height, fill_color,id);
             }
             else if (element_name == "ellipse")
             {
@@ -71,7 +71,7 @@ namespace svg
                 int ry = child->IntAttribute("ry");
                 Point radius={rx,ry};
                 Color fill_color=parse_color(child->Attribute("fill"));
-                SVGElement* svg_element = new Ellipse(center, radius, fill_color, id);
+                svg_element = new Ellipse(center, radius, fill_color, id);
             }
             else if (element_name == "circle")
             {
@@ -80,21 +80,21 @@ namespace svg
                 center.y = child->IntAttribute("cy");
                 int radius = child->IntAttribute("r");
                 Color fill_color=parse_color(child->Attribute("fill"));
-                SVGElement* svg_element = new Circle(center, radius,fill_color,id);
+                svg_element = new Circle(center, radius,fill_color,id);
             }
-            else if (element_name == "polyine")
+            else if (element_name == "polyline")
             {
                 string points_str = child->Attribute("points");
-                istringstream iss(points_str);
                 replace(points_str.begin(), points_str.end(), ',', ' ');
+                istringstream iss(points_str);
                 vector<Point> points;
                 Point p;
                 while (iss >> p.x >> p.y)
                 {
                     points.push_back(p);
                 }
-                Color fill_color=parse_color(child->Attribute("fill"));
-                SVGElement* svg_element = new Polyline(points,fill_color,id);
+                Color fill_color=parse_color(child->Attribute("stroke"));
+                svg_element = new Polyline(points,fill_color,id);
             }
             else if (element_name == "line")
             {
@@ -105,7 +105,7 @@ namespace svg
                 end.x = child->IntAttribute("x2");
                 end.y = child->IntAttribute("y2");
                 Color fill_color=parse_color(child->Attribute("stroke"));
-                SVGElement* svg_element = new Line(start, end,fill_color,id);
+                svg_element = new Line(start, end,fill_color,id);
             }
             if (svg_element != nullptr)
             {

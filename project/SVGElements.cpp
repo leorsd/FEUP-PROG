@@ -1,5 +1,4 @@
 #include "SVGElements.hpp"
-
 namespace svg
 {   
     // SVGElement
@@ -115,6 +114,7 @@ namespace svg
                      const std::string &id)
         : SVGElement(fill, id), points(points)
     {
+            std::cout<<points.size()<<std::endl;
     }
 
     void Polygon::draw(PNGImage &img) const
