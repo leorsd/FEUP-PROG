@@ -1,6 +1,7 @@
 *.vscode
-*.o
-*.a
-svgtopng
-test
-output/*
+/project/*.o
+/project/*.a
+/project/svgtopng
+/project/test
+/project/output/*
+project/xmldump
