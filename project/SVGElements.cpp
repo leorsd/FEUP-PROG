@@ -92,6 +92,14 @@ namespace svg
         }
     }
 
+    void Polyline::scale(const Point &origin, int factor)
+    {
+        for (Point &p:points)
+        {
+            p=p.scale(origin, factor);
+        }
+    }
+
     // Line
     Line::Line(const Point &start,
                const Point &end,

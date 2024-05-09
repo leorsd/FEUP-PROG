@@ -227,6 +227,14 @@ namespace svg
          */
         void rotate(const Point &origin, int degrees) override;
 
+        /**
+         * @brief Scale the polyline
+         * 
+         * @param origin Point representing the origin of the scaling
+         * @param factor Integer representing the factor of the scaling
+         */
+        void scale(const Point &origin, int factor) override;
+
     protected:
         std::vector<Point> points;
         int width = 1;
