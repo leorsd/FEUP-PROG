@@ -376,6 +376,12 @@ namespace svg
             Group(const std::vector<SVGElement *> &elements = {}, const std::string &id = "undefined");
 
             /**
+             * @brief Destroy the Group object
+             * 
+             */
+            ~Group();
+
+            /**
              * @brief Draw all elements in the group on the PNG image
              * 
              * @param img destination PNG image
@@ -411,6 +417,13 @@ namespace svg
              * @param element SVGElement to be added to the group
              */
             void add_element(SVGElement *element);
+
+            /**
+             * @brief Get the elements of the group
+             * 
+             * @return std::vector<SVGElement *> containing the elements of the group
+             */
+            std::vector<SVGElement *>& get_elements() {return elements;}
         private:
             std::vector<SVGElement *> elements;
     };

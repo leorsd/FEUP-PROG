@@ -6,3 +6,6 @@
 /project/output/*
 /project/xmldump
 /project/external/tinyxml2/*.o
+/project/test_log.txt
+
+!/project/output/.gitkeep

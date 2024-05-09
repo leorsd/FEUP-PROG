@@ -166,6 +166,14 @@ namespace svg
     {
     }
 
+    Group::~Group()
+    {
+        for (SVGElement *element: elements)
+        {
+            delete element;
+        }
+    }
+
     void Group::draw(PNGImage &img) const {
         for (const SVGElement *element: elements)
         {
