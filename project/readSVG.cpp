@@ -9,7 +9,33 @@ using namespace std;
 using namespace tinyxml2;
 
 namespace svg
-{
+{   
+    void log_svg_elements(std::vector<SVGElement*>& svg_elements, std::string base = "")
+    {
+        for (SVGElement* element : svg_elements)
+        {
+            std::cout << base << element->get_id() << std::endl;
+            if (element -> is_group()) {
+                Group* group = dynamic_cast<Group*>(element);
+                log_svg_elements(group->get_elements(), base + "\t");
+            }
+        }
+    }
+
+    std::vector<SVGElement*> full_svg_elements;
+
+    SVGElement * get_element_by_id(const string& id)
+    {
+        for (SVGElement * element : full_svg_elements)
+        {
+            if (element->get_id() == id)
+            {
+                return element;
+            }
+        }
+        return nullptr;
+    }
+
     void processElement(XMLElement* element, vector<SVGElement *>& svg_elements)
     {
         string element_name = element->Name();
@@ -102,6 +128,19 @@ namespace svg
                 processElement(child, group_element->get_elements());
             }
         }
+        else if (element_name == "use") 
+        {
+            string href = element->Attribute("href");
+            std::cout << std::endl;
+            std::cout << "Href: " << href << std::endl;
+            std::cout << std::endl;
+            string old_id = href.substr(1);
+            SVGElement* referenced_element = get_element_by_id(old_id);
+            if (referenced_element != nullptr)
+            {
+                svg_element = referenced_element->clone(id);
+            }
+        }
 
         if (svg_element != nullptr)
         {
@@ -162,6 +201,7 @@ namespace svg
                 }
 
             }
+            full_svg_elements.push_back(svg_element);
             svg_elements.push_back(svg_element);
         }
     }
@@ -184,6 +224,8 @@ namespace svg
         {
             processElement(child, svg_elements);
         }
+
+        log_svg_elements(svg_elements);
     }
 
 }

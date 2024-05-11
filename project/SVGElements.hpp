@@ -60,6 +60,20 @@ namespace svg
         virtual ~SVGElement();
 
         /**
+         * @brief Clone the SVGElement
+         * 
+         * @return SVGElement* 
+         */
+        virtual SVGElement* clone(const std::string &id) const = 0;
+
+        /**
+         * @brief Check if the SVGElement is a group
+         * 
+         * @return true if the element is a group, false otherwise
+         */
+        virtual bool is_group() const { return false; }
+
+        /**
          * @brief Draw the SVGElement on the PNG image
          * 
          * @param img destination PNG image
@@ -129,6 +143,13 @@ namespace svg
         Point get_radius() const;
 
         /**
+         * @brief Clone the ellipse
+         * 
+         * @return Ellipse* 
+         */
+        Ellipse* clone(const std::string &id) const override;
+
+        /**
          * @brief Draw the ellipse on the PNG image
          * 
          * @param img destination PNG image
@@ -158,7 +179,7 @@ namespace svg
          */
         void scale(const Point &origin, int factor) override;
 
-    private:
+    protected:
         Point center;
         Point radius;
     };
@@ -180,6 +201,13 @@ namespace svg
          * @param id string representing the id of the circle
          */
         Circle(const Point &center, int radius, const Color &fill = Color{0,0,0}, const std::string &id = "undefined");
+
+        /**
+         * @brief Clone the circle
+         * 
+         * @return Circle* 
+         */
+        Circle* clone(const std::string &id) const override;
     };
 
 
@@ -206,6 +234,13 @@ namespace svg
          * @return std::vector<Point> containing the Polyline's Points
          */
         const std::vector<Point>& get_points() const { return points; }
+
+        /**
+         * @brief Clone the polyline
+         * 
+         * @return Polyline* 
+         */
+        Polyline* clone(const std::string &id) const override;
 
         /**
          * @brief Draw the polyline on the PNG image
@@ -261,6 +296,13 @@ namespace svg
         Line(const Point &start, const Point &end, const Color &stroke = Color{0,0,0}, const std::string &id = "undefined");
 
         /**
+         * @brief Clone the line
+         * 
+         * @return Line* 
+         */
+        Line* clone(const std::string &id) const override;
+
+        /**
          * @brief Get the initial Point
          * 
          * @return First Point in the vector
@@ -292,6 +334,13 @@ namespace svg
          */
         Polygon(const std::vector<Point> &points, const Color &fill_color = Color{0,0,0}, const std::string &id = "undefined");
         
+        /**
+         * @brief Clone the polygon
+         * 
+         * @return Polygon* 
+         */
+        Polygon* clone(const std::string &id) const override;
+
         /**
          * @brief Draw the polygon on the PNG image
          * 
@@ -329,7 +378,7 @@ namespace svg
          */
         void scale(const Point &origin, int factor) override;
 
-    private:
+    protected:
         std::vector<Point> points;
     };
 
@@ -349,6 +398,13 @@ namespace svg
          * @param id string representing the id of the rectangle
          */
         Rect(const Point &left_top_corner, const Point &width_and_height, const Color &fill_color = Color{0,0,0}, const std::string &id = "undefined");
+
+        /**
+         * @brief Clone the rectangle
+         * 
+         * @return Rect* 
+         */
+        Rect* clone(const std::string &id) const override;
 
         /**
          * @brief Get the width and height of the rectangle
@@ -380,6 +436,20 @@ namespace svg
              * 
              */
             ~Group();
+
+            /**
+             * @brief Clone the group
+             * 
+             * @return Group* 
+             */
+            Group* clone(const std::string &id) const override;
+
+            /**
+             * @brief used in recursive search for element with certain id
+             * 
+             * @return true if the element is a group
+             */
+            bool is_group() const override { return true; }
 
             /**
              * @brief Draw all elements in the group on the PNG image

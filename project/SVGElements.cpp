@@ -14,6 +14,12 @@ namespace svg
     {
     }
 
+    Ellipse* Ellipse::clone(const std::string &id) const
+    {
+        Ellipse* new_ellipse = new Ellipse(this->center, this->radius, this->fill, id);
+        return new_ellipse;
+    }
+
     void Ellipse::draw(PNGImage &img) const
     {
         img.draw_ellipse(center, radius, fill);
@@ -54,11 +60,23 @@ namespace svg
     {
     }
 
+    Circle* Circle::clone(const std::string &id) const
+    {
+        Circle* new_circle = new Circle(this->center, this->radius.x, this->fill, id);
+        return new_circle;
+    }
+
     Polyline::Polyline(const std::vector<Point> &points,
                        const Color &stroke,
                        const std::string &id )
                     :  SVGElement(stroke, id), points(points)
     {
+    }
+
+    Polyline* Polyline::clone(const std::string &id) const 
+    {
+        Polyline* new_polyline = new Polyline(this->points, this->fill, id);
+        return new_polyline;
     }
 
     void Polyline::draw(PNGImage &img) const
@@ -108,17 +126,29 @@ namespace svg
     {
     }
 
+    Line* Line::clone(const std::string &id) const
+    {
+        Line* new_line = new Line(this->points[0], this->points[1], this->fill, id);
+        return new_line;
+    }
+
     // Polygon
     Polygon::Polygon(const std::vector<Point> &points, 
                      const Color &fill,
                      const std::string &id)
         : SVGElement(fill, id), points(points)
     {
-            std::cout<<points.size()<<std::endl;
+    }
+
+    Polygon* Polygon::clone(const std::string &id) const
+    {
+        Polygon* new_polygon = new Polygon(this->points, this->fill, id);
+        return new_polygon;
     }
 
     void Polygon::draw(PNGImage &img) const
     {
+        std::cout << "Drawing polygon with id " << id << " and top left at " << points[0].x << ',' << points[0].y << std::endl;
         img.draw_polygon(points,fill);
     }
 
@@ -161,6 +191,12 @@ namespace svg
     {
     }
 
+    Rect* Rect::clone(const std::string &id) const
+    {
+        Rect* new_rect = new Rect(this->points[0], this->width_and_height, this->fill, id);
+        return new_rect;
+    }
+
     Group::Group(const std::vector<SVGElement*> &elements, const std::string &id)
         : SVGElement(Color{0,0,0}, id), elements(elements)
     {
@@ -174,11 +210,25 @@ namespace svg
         }
     }
 
+    Group* Group::clone(const std::string &id) const
+    {
+        std::vector<SVGElement*> new_elements;
+        for (SVGElement *element: elements)
+        {
+            new_elements.push_back(element->clone(element->get_id()+"_cloned"));
+        }
+        Group* new_group = new Group(new_elements, id);
+        return new_group;
+    }
+
     void Group::draw(PNGImage &img) const {
+        std::cout << std::endl;
+        std::cout << "Drawing group with id " << id << std::endl;
         for (const SVGElement *element: elements)
         {
             element->draw(img);
         }
+        std::cout << std::endl;
     }
 
     void Group::translate(const Point &dir) {
