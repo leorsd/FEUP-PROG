@@ -60,12 +60,6 @@ namespace svg
     {
     }
 
-    Circle* Circle::clone(const std::string &id) const
-    {
-        Circle* new_circle = new Circle(this->center, this->radius.x, this->fill, id);
-        return new_circle;
-    }
-
     Polyline::Polyline(const std::vector<Point> &points,
                        const Color &stroke,
                        const std::string &id )
@@ -126,12 +120,6 @@ namespace svg
     {
     }
 
-    Line* Line::clone(const std::string &id) const
-    {
-        Line* new_line = new Line(this->points[0], this->points[1], this->fill, id);
-        return new_line;
-    }
-
     // Polygon
     Polygon::Polygon(const std::vector<Point> &points, 
                      const Color &fill,
@@ -148,7 +136,6 @@ namespace svg
 
     void Polygon::draw(PNGImage &img) const
     {
-        std::cout << "Drawing polygon with id " << id << " and top left at " << points[0].x << ',' << points[0].y << std::endl;
         img.draw_polygon(points,fill);
     }
 
@@ -186,16 +173,10 @@ namespace svg
                 left_top_corner.translate(Point{width_and_height.x, 0}), 
                 left_top_corner.translate(Point{width_and_height.x, width_and_height.y}), 
                 left_top_corner.translate(Point{0, width_and_height.y})}, 
-                fill_color, id),
-        width_and_height(width_and_height)
+                fill_color, id)
     {
     }
 
-    Rect* Rect::clone(const std::string &id) const
-    {
-        Rect* new_rect = new Rect(this->points[0], this->width_and_height, this->fill, id);
-        return new_rect;
-    }
 
     Group::Group(const std::vector<SVGElement*> &elements, const std::string &id)
         : SVGElement(Color{0,0,0}, id), elements(elements)
@@ -215,15 +196,13 @@ namespace svg
         std::vector<SVGElement*> new_elements;
         for (SVGElement *element: elements)
         {
-            new_elements.push_back(element->clone(element->get_id()+"_cloned"));
+            new_elements.push_back(element->clone(element->get_id()+"copy"));
         }
         Group* new_group = new Group(new_elements, id);
         return new_group;
     }
 
     void Group::draw(PNGImage &img) const {
-        std::cout << std::endl;
-        std::cout << "Drawing group with id " << id << std::endl;
         for (const SVGElement *element: elements)
         {
             element->draw(img);

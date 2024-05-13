@@ -126,7 +126,7 @@ namespace svg
          * @param id string representing the id of the ellipse
          */
         Ellipse(const Point &center, const Point &radius, 
-        const Color &fill = Color{0,0,0}, const std::string &id = "undefined");
+        const Color &fill, const std::string &id);
 
         /**
          * @brief Get the center
@@ -200,14 +200,7 @@ namespace svg
          * @param fill color of the circle
          * @param id string representing the id of the circle
          */
-        Circle(const Point &center, int radius, const Color &fill = Color{0,0,0}, const std::string &id = "undefined");
-
-        /**
-         * @brief Clone the circle
-         * 
-         * @return Circle* 
-         */
-        Circle* clone(const std::string &id) const override;
+        Circle(const Point &center, int radius, const Color &fill, const std::string &id);
     };
 
 
@@ -226,7 +219,7 @@ namespace svg
          * @param stroke color of the polyline
          * @param id string representing the id of the polyline
          */
-        Polyline(const std::vector<Point> &points, const Color &stroke = Color{0,0,0}, const std::string &id = "undefined");
+        Polyline(const std::vector<Point> &points, const Color &stroke, const std::string &id);
 
         /**
          * @brief Get the points of the polyline
@@ -293,14 +286,7 @@ namespace svg
          * @param stroke color of the line
          * @param id string representing the id of the line
          */
-        Line(const Point &start, const Point &end, const Color &stroke = Color{0,0,0}, const std::string &id = "undefined");
-
-        /**
-         * @brief Clone the line
-         * 
-         * @return Line* 
-         */
-        Line* clone(const std::string &id) const override;
+        Line(const Point &start, const Point &end, const Color &stroke, const std::string &id);
 
         /**
          * @brief Get the initial Point
@@ -332,7 +318,7 @@ namespace svg
          * @param fill_color color of the polygon
          * @param id string representing the id of the polygon
          */
-        Polygon(const std::vector<Point> &points, const Color &fill_color = Color{0,0,0}, const std::string &id = "undefined");
+        Polygon(const std::vector<Point> &points, const Color &fill_color, const std::string &id);
         
         /**
          * @brief Clone the polygon
@@ -397,23 +383,7 @@ namespace svg
          * @param fill_color Color of the rectangle
          * @param id string representing the id of the rectangle
          */
-        Rect(const Point &left_top_corner, const Point &width_and_height, const Color &fill_color = Color{0,0,0}, const std::string &id = "undefined");
-
-        /**
-         * @brief Clone the rectangle
-         * 
-         * @return Rect* 
-         */
-        Rect* clone(const std::string &id) const override;
-
-        /**
-         * @brief Get the width and height of the rectangle
-         * 
-         * @return Point containing the width and height of the rectangle
-         */
-        Point get_width_and_height() const {return width_and_height;}
-    private:
-        Point width_and_height;
+        Rect(const Point &left_top_corner, const Point &width_and_height, const Color &fill_color, const std::string &id);
     };
 
     /**
