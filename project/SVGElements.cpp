@@ -25,16 +25,6 @@ namespace svg
         img.draw_ellipse(center, radius, fill);
     }
 
-    Point Ellipse::get_center() const
-    {
-        return center;
-    }
-
-    Point Ellipse::get_radius() const
-    {
-        return radius;
-    }
-
     void Ellipse::translate(const Point &dir)
     {
         center = center.translate(dir);
@@ -196,7 +186,7 @@ namespace svg
         std::vector<SVGElement*> new_elements;
         for (SVGElement *element: elements)
         {
-            new_elements.push_back(element->clone(element->get_id()+"copy"));
+            new_elements.push_back(element->clone(element->get_id()+"_clone"));
         }
         Group* new_group = new Group(new_elements, id);
         return new_group;
@@ -207,7 +197,6 @@ namespace svg
         {
             element->draw(img);
         }
-        std::cout << std::endl;
     }
 
     void Group::translate(const Point &dir) {

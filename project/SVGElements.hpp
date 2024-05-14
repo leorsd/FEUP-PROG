@@ -47,13 +47,6 @@ namespace svg
         std::string get_id() const {return id;}
 
         /**
-         * @brief Get the fill color of the SVGElement
-         * 
-         * @return Color object containing the fill color of the SVGElement
-         */
-        Color get_fill() const {return fill;}
-
-        /**
          * @brief Destroy the SVGElement object
          * 
          */
@@ -65,13 +58,6 @@ namespace svg
          * @return SVGElement* 
          */
         virtual SVGElement* clone(const std::string &id) const = 0;
-
-        /**
-         * @brief Check if the SVGElement is a group
-         * 
-         * @return true if the element is a group, false otherwise
-         */
-        virtual bool is_group() const { return false; }
 
         /**
          * @brief Draw the SVGElement on the PNG image
@@ -127,20 +113,6 @@ namespace svg
          */
         Ellipse(const Point &center, const Point &radius, 
         const Color &fill, const std::string &id);
-
-        /**
-         * @brief Get the center
-         * 
-         * @return Point 
-         */
-        Point get_center() const;
-
-        /**
-         * @brief Get the radius
-         * 
-         * @return Point 
-         */
-        Point get_radius() const;
 
         /**
          * @brief Clone the ellipse
@@ -222,13 +194,6 @@ namespace svg
         Polyline(const std::vector<Point> &points, const Color &stroke, const std::string &id);
 
         /**
-         * @brief Get the points of the polyline
-         * 
-         * @return std::vector<Point> containing the Polyline's Points
-         */
-        const std::vector<Point>& get_points() const { return points; }
-
-        /**
          * @brief Clone the polyline
          * 
          * @return Polyline* 
@@ -267,7 +232,6 @@ namespace svg
 
     protected:
         std::vector<Point> points;
-        int width = 1;
     };
 
     /**
@@ -287,22 +251,7 @@ namespace svg
          * @param id string representing the id of the line
          */
         Line(const Point &start, const Point &end, const Color &stroke, const std::string &id);
-
-        /**
-         * @brief Get the initial Point
-         * 
-         * @return First Point in the vector
-         */
-        const Point get_initial_point() const { return points.front(); }
-
-        /**
-         * @brief Get the final Point
-         * 
-         * @return Last Point in the vector
-         */
-        const Point get_final_point() const { return points.back(); }
     };
-
 
     /**
      * @brief Implementation of Polygon class
@@ -333,13 +282,6 @@ namespace svg
          * @param img destinatiton PNGImage 
          */
         void draw(PNGImage &img) const override;
-
-        /**
-         * @brief Get the points of the polygon
-         * 
-         * @return std::vector<Point> containing the Polygon's points
-         */
-        const std::vector<Point> get_points() const {return points;}
 
         /**
          * @brief Translate the polygon
@@ -399,7 +341,7 @@ namespace svg
              * @param elements vector og SVGElements
              * @param id string representing the id of the group
              */
-            Group(const std::vector<SVGElement *> &elements = {}, const std::string &id = "undefined");
+            Group(const std::vector<SVGElement *> &elements = {}, const std::string &id="undefined");
 
             /**
              * @brief Destroy the Group object
@@ -413,13 +355,6 @@ namespace svg
              * @return Group* 
              */
             Group* clone(const std::string &id) const override;
-
-            /**
-             * @brief used in recursive search for element with certain id
-             * 
-             * @return true if the element is a group
-             */
-            bool is_group() const override { return true; }
 
             /**
              * @brief Draw all elements in the group on the PNG image

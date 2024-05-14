@@ -23,6 +23,39 @@ namespace svg
         }
         return nullptr;
     }
+    vector<Point> string_to_vector_of_points(string points_str)
+    {
+        replace(points_str.begin(), points_str.end(), ',', ' ');
+        istringstream iss(points_str);
+        vector<Point> points;
+        Point p;
+        while (iss >> p.x >> p.y)
+        {
+            points.push_back(p);
+        }
+        return points;
+    }
+
+    Point string_to_point(string point_str)
+    {
+        size_t start = point_str.find("(") + 1;
+        size_t end = point_str.find(")");
+        string values_str = point_str.substr(start, end - start);
+        replace(values_str.begin(), values_str.end(), ',', ' ');
+        istringstream iss(values_str);
+        Point translation;
+        iss >> translation.x >> translation.y;
+        return translation;
+    }
+
+    int string_to_int(string int_str)
+    {
+        size_t start = int_str.find("(") + 1;
+        size_t end = int_str.find(")");
+        string angle_str = int_str.substr(start, end - start);
+        int value = stoi(angle_str);
+        return value;
+    }
 
     void processElement(XMLElement* element, vector<SVGElement *>& svg_elements)
     {
@@ -40,14 +73,7 @@ namespace svg
         if (element_name == "polygon")
         {
             string points_str = element->Attribute("points");
-            replace(points_str.begin(), points_str.end(), ',', ' ');
-            istringstream iss(points_str);
-            vector<Point> points;
-            Point p;
-            while (iss >> p.x >> p.y)
-            {
-                points.push_back(p);
-            }
+            vector<Point> points=string_to_vector_of_points(points_str);
             Color fill_color=parse_color(element->Attribute("fill"));
             svg_element = new Polygon(points,fill_color,id);
         }
@@ -67,9 +93,9 @@ namespace svg
             Point center;
             center.x = element->IntAttribute("cx");
             center.y = element->IntAttribute("cy");
-            int rx = element->IntAttribute("rx");
-            int ry = element->IntAttribute("ry");
-            Point radius={rx,ry};
+            Point radius;
+            radius.x = element->IntAttribute("rx");
+            radius.y = element->IntAttribute("ry");
             Color fill_color=parse_color(element->Attribute("fill"));
             svg_element = new Ellipse(center, radius, fill_color, id);
         }
@@ -85,14 +111,7 @@ namespace svg
         else if (element_name == "polyline")
         {
             string points_str = element->Attribute("points");
-            replace(points_str.begin(), points_str.end(), ',', ' ');
-            istringstream iss(points_str);
-            vector<Point> points;
-            Point p;
-            while (iss >> p.x >> p.y)
-            {
-                points.push_back(p);
-            }
+            vector<Point> points=string_to_vector_of_points(points_str);
             Color fill_color=parse_color(element->Attribute("stroke"));
             svg_element = new Polyline(points,fill_color,id);
         }
@@ -135,29 +154,18 @@ namespace svg
                 string transform_str = transform_char;
                 if (transform_str.find("translate") != string::npos)
                 {
-                    size_t start = transform_str.find("(") + 1;
-                    size_t end = transform_str.find(")");
-                    string values_str = transform_str.substr(start, end - start);
-                    replace(values_str.begin(), values_str.end(), ',', ' ');
-                    istringstream iss(values_str);
-                    Point translation;
-                    iss >> translation.x >> translation.y;
+                    Point translation = string_to_point(transform_str);
                     svg_element->translate(translation);
                 }
                 else if (transform_str.find("rotate") != string::npos)
                 {
-                    size_t start = transform_str.find("(") + 1;
-                    size_t end = transform_str.find(")");
-                    string angle_str = transform_str.substr(start, end - start);
-                    int angle = stoi(angle_str);
+                    int angle = string_to_int(transform_str);
                     const char* origin_char = element->Attribute("transform-origin");
                     Point origin;
                     if (origin_char != NULL)
                     {
                         string origin_str = origin_char;
-                        replace(origin_str.begin(), origin_str.end(), ',', ' ');
-                        istringstream iss(origin_str);
-                        iss >> origin.x >> origin.y;
+                        origin = string_to_point(origin_str);
                     }else {
                         origin.x = 0;
                         origin.y = 0;
@@ -166,18 +174,13 @@ namespace svg
                 }
                 else if (transform_str.find("scale") != string::npos)
                 {
-                    size_t start = transform_str.find("(") + 1;
-                    size_t end = transform_str.find(")");
-                    string value_str = transform_str.substr(start, end - start);
-                    int scale=stoi(value_str);
+                    int scale=string_to_int(transform_str);
                     const char* origin_char = element->Attribute("transform-origin");
                     Point origin;
                     if (origin_char != NULL)
                     {
                         string origin_str = origin_char;
-                        replace(origin_str.begin(), origin_str.end(), ',', ' ');
-                        istringstream iss(origin_str);
-                        iss >> origin.x >> origin.y;
+                        origin = string_to_point(origin_str);
                     }else {
                         origin.x = 0;
                         origin.y = 0;
@@ -203,7 +206,6 @@ namespace svg
         dimensions.x = xml_elem->IntAttribute("width");
         dimensions.y = xml_elem->IntAttribute("height");
         
-        // TODO complete code -->
         for (XMLElement* child = xml_elem->FirstChildElement(); child != NULL; child = child->NextSiblingElement())
         {
             processElement(child, svg_elements);
