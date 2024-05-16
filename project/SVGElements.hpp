@@ -47,17 +47,17 @@ namespace svg
         std::string get_id() const {return id;}
 
         /**
-         * @brief Get the fill color of the SVGElement
-         * 
-         * @return Color object containing the fill color of the SVGElement
-         */
-        Color get_fill() const {return fill;}
-
-        /**
          * @brief Destroy the SVGElement object
          * 
          */
         virtual ~SVGElement();
+
+        /**
+         * @brief Clone the SVGElement
+         * 
+         * @return SVGElement* 
+         */
+        virtual SVGElement* clone(const std::string &id) const = 0;
 
         /**
          * @brief Draw the SVGElement on the PNG image
@@ -112,21 +112,14 @@ namespace svg
          * @param id string representing the id of the ellipse
          */
         Ellipse(const Point &center, const Point &radius, 
-        const Color &fill = Color{0,0,0}, const std::string &id = "undefined");
+        const Color &fill, const std::string &id);
 
         /**
-         * @brief Get the center
+         * @brief Clone the ellipse
          * 
-         * @return Point 
+         * @return Ellipse* 
          */
-        Point get_center() const;
-
-        /**
-         * @brief Get the radius
-         * 
-         * @return Point 
-         */
-        Point get_radius() const;
+        Ellipse* clone(const std::string &id) const override;
 
         /**
          * @brief Draw the ellipse on the PNG image
@@ -158,7 +151,7 @@ namespace svg
          */
         void scale(const Point &origin, int factor) override;
 
-    private:
+    protected:
         Point center;
         Point radius;
     };
@@ -179,7 +172,7 @@ namespace svg
          * @param fill color of the circle
          * @param id string representing the id of the circle
          */
-        Circle(const Point &center, int radius, const Color &fill = Color{0,0,0}, const std::string &id = "undefined");
+        Circle(const Point &center, int radius, const Color &fill, const std::string &id);
     };
 
 
@@ -198,14 +191,14 @@ namespace svg
          * @param stroke color of the polyline
          * @param id string representing the id of the polyline
          */
-        Polyline(const std::vector<Point> &points, const Color &stroke = Color{0,0,0}, const std::string &id = "undefined");
+        Polyline(const std::vector<Point> &points, const Color &stroke, const std::string &id);
 
         /**
-         * @brief Get the points of the polyline
+         * @brief Clone the polyline
          * 
-         * @return std::vector<Point> containing the Polyline's Points
+         * @return Polyline* 
          */
-        const std::vector<Point>& get_points() const { return points; }
+        Polyline* clone(const std::string &id) const override;
 
         /**
          * @brief Draw the polyline on the PNG image
@@ -239,7 +232,6 @@ namespace svg
 
     protected:
         std::vector<Point> points;
-        int width = 1;
     };
 
     /**
@@ -258,23 +250,8 @@ namespace svg
          * @param stroke color of the line
          * @param id string representing the id of the line
          */
-        Line(const Point &start, const Point &end, const Color &stroke = Color{0,0,0}, const std::string &id = "undefined");
-
-        /**
-         * @brief Get the initial Point
-         * 
-         * @return First Point in the vector
-         */
-        const Point get_initial_point() const { return points.front(); }
-
-        /**
-         * @brief Get the final Point
-         * 
-         * @return Last Point in the vector
-         */
-        const Point get_final_point() const { return points.back(); }
+        Line(const Point &start, const Point &end, const Color &stroke, const std::string &id);
     };
-
 
     /**
      * @brief Implementation of Polygon class
@@ -290,21 +267,21 @@ namespace svg
          * @param fill_color color of the polygon
          * @param id string representing the id of the polygon
          */
-        Polygon(const std::vector<Point> &points, const Color &fill_color = Color{0,0,0}, const std::string &id = "undefined");
+        Polygon(const std::vector<Point> &points, const Color &fill_color, const std::string &id);
         
+        /**
+         * @brief Clone the polygon
+         * 
+         * @return Polygon* 
+         */
+        Polygon* clone(const std::string &id) const override;
+
         /**
          * @brief Draw the polygon on the PNG image
          * 
          * @param img destinatiton PNGImage 
          */
         void draw(PNGImage &img) const override;
-
-        /**
-         * @brief Get the points of the polygon
-         * 
-         * @return std::vector<Point> containing the Polygon's points
-         */
-        const std::vector<Point> get_points() const {return points;}
 
         /**
          * @brief Translate the polygon
@@ -329,7 +306,7 @@ namespace svg
          */
         void scale(const Point &origin, int factor) override;
 
-    private:
+    protected:
         std::vector<Point> points;
     };
 
@@ -348,16 +325,7 @@ namespace svg
          * @param fill_color Color of the rectangle
          * @param id string representing the id of the rectangle
          */
-        Rect(const Point &left_top_corner, const Point &width_and_height, const Color &fill_color = Color{0,0,0}, const std::string &id = "undefined");
-
-        /**
-         * @brief Get the width and height of the rectangle
-         * 
-         * @return Point containing the width and height of the rectangle
-         */
-        Point get_width_and_height() const {return width_and_height;}
-    private:
-        Point width_and_height;
+        Rect(const Point &left_top_corner, const Point &width_and_height, const Color &fill_color, const std::string &id);
     };
 
     /**
@@ -373,7 +341,20 @@ namespace svg
              * @param elements vector og SVGElements
              * @param id string representing the id of the group
              */
-            Group(const std::vector<SVGElement *> &elements = {}, const std::string &id = "undefined");
+            Group(const std::vector<SVGElement *> &elements = {}, const std::string &id="undefined");
+
+            /**
+             * @brief Destroy the Group object
+             * 
+             */
+            ~Group();
+
+            /**
+             * @brief Clone the group
+             * 
+             * @return Group* 
+             */
+            Group* clone(const std::string &id) const override;
 
             /**
              * @brief Draw all elements in the group on the PNG image
@@ -411,6 +392,13 @@ namespace svg
              * @param element SVGElement to be added to the group
              */
             void add_element(SVGElement *element);
+
+            /**
+             * @brief Get the elements of the group
+             * 
+             * @return std::vector<SVGElement *> containing the elements of the group
+             */
+            std::vector<SVGElement *>& get_elements() {return elements;}
         private:
             std::vector<SVGElement *> elements;
     };

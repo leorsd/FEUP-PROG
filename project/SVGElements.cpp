@@ -14,19 +14,15 @@ namespace svg
     {
     }
 
+    Ellipse* Ellipse::clone(const std::string &id) const
+    {
+        Ellipse* new_ellipse = new Ellipse(this->center, this->radius, this->fill, id);
+        return new_ellipse;
+    }
+
     void Ellipse::draw(PNGImage &img) const
     {
         img.draw_ellipse(center, radius, fill);
-    }
-
-    Point Ellipse::get_center() const
-    {
-        return center;
-    }
-
-    Point Ellipse::get_radius() const
-    {
-        return radius;
     }
 
     void Ellipse::translate(const Point &dir)
@@ -59,6 +55,12 @@ namespace svg
                        const std::string &id )
                     :  SVGElement(stroke, id), points(points)
     {
+    }
+
+    Polyline* Polyline::clone(const std::string &id) const 
+    {
+        Polyline* new_polyline = new Polyline(this->points, this->fill, id);
+        return new_polyline;
     }
 
     void Polyline::draw(PNGImage &img) const
@@ -114,7 +116,12 @@ namespace svg
                      const std::string &id)
         : SVGElement(fill, id), points(points)
     {
-            std::cout<<points.size()<<std::endl;
+    }
+
+    Polygon* Polygon::clone(const std::string &id) const
+    {
+        Polygon* new_polygon = new Polygon(this->points, this->fill, id);
+        return new_polygon;
     }
 
     void Polygon::draw(PNGImage &img) const
@@ -156,14 +163,33 @@ namespace svg
                 left_top_corner.translate(Point{width_and_height.x, 0}), 
                 left_top_corner.translate(Point{width_and_height.x, width_and_height.y}), 
                 left_top_corner.translate(Point{0, width_and_height.y})}, 
-                fill_color, id),
-        width_and_height(width_and_height)
+                fill_color, id)
     {
     }
+
 
     Group::Group(const std::vector<SVGElement*> &elements, const std::string &id)
         : SVGElement(Color{0,0,0}, id), elements(elements)
     {
+    }
+
+    Group::~Group()
+    {
+        for (SVGElement *element: elements)
+        {
+            delete element;
+        }
+    }
+
+    Group* Group::clone(const std::string &id) const
+    {
+        std::vector<SVGElement*> new_elements;
+        for (SVGElement *element: elements)
+        {
+            new_elements.push_back(element->clone(element->get_id()+"_clone"));
+        }
+        Group* new_group = new Group(new_elements, id);
+        return new_group;
     }
 
     void Group::draw(PNGImage &img) const {
