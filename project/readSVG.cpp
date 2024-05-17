@@ -10,8 +10,13 @@ using namespace tinyxml2;
 
 namespace svg
 {   
+    /* global variable to store all the elements*/
     std::vector<SVGElement*> full_svg_elements;
 
+    /** 
+     * @brief get the type of the element by its id
+     * @param id the id of the element
+    */
     SVGElement * get_element_by_id(const string& id)
     {
         for (SVGElement * element : full_svg_elements)
@@ -23,6 +28,13 @@ namespace svg
         }
         return nullptr;
     }
+    /**
+     * @brief get a vector of points from a string
+     * used in ProcessElement (polygon, polyline)
+     * 
+     * @param points_str 
+     * @return vector<Point> 
+     */
     vector<Point> string_to_vector_of_points(string points_str)
     {
         replace(points_str.begin(), points_str.end(), ',', ' ');
@@ -36,6 +48,13 @@ namespace svg
         return points;
     }
 
+    /**
+     * @brief get a point from a string
+     * used in ProcessElement (translate, rotate, scale)
+     * 
+     * @param point_str 
+     * @return Point 
+     */
     Point string_to_point(string point_str)
     {
         size_t start = point_str.find("(") + 1;
@@ -48,6 +67,13 @@ namespace svg
         return translation;
     }
 
+    /**
+     * @brief convert a string with brackets to an integer
+     * used in ProcessElement (rotate, scale)
+     * 
+     * @param int_str 
+     * @return int 
+     */
     int string_to_int(string int_str)
     {
         size_t start = int_str.find("(") + 1;
@@ -57,16 +83,18 @@ namespace svg
         return value;
     }
 
-    void processElement(XMLElement* element, vector<SVGElement *>& svg_elements)
+    void process_element(XMLElement* element, vector<SVGElement *>& svg_elements)
     {
         string element_name = element->Name();
+        /* pointer to the element to be created; creating the element outside the if statements saves some lines */
         SVGElement* svg_element = nullptr;
-        const char* id_char = element->Attribute("id");
+        const char* id_char = element->Attribute("id");    
         string id;
-        if (id_char!=NULL) 
+        /* If the element doesn't have an id, id_char will be NULL */
+        if (id_char!=NULL)
         {
             id = id_char;
-        } else 
+        } else /* Default id is "undefined" */
         {
             id = "undefined";
         }
@@ -84,7 +112,7 @@ namespace svg
             top_left.y = element->IntAttribute("y");
             int width = element->IntAttribute("width");
             int height = element->IntAttribute("height");
-            Point width_and_height={width-1,height-1};
+            Point width_and_height={width-1,height-1};      /* -1 because the width and height begin in 0 */
             Color fill_color=parse_color(element->Attribute("fill"));
             svg_element = new Rect(top_left, width_and_height, fill_color,id);
         }
@@ -126,13 +154,13 @@ namespace svg
             Color fill_color=parse_color(element->Attribute("stroke"));
             svg_element = new Line(start, end,fill_color,id);
         }
-        else if (element_name == "g") // group element
+        else if (element_name == "g") /* group element */
         {
             Group* group_element = new Group({},id);
             svg_element = group_element;
             for (XMLElement* child = element->FirstChildElement(); child != NULL; child = child->NextSiblingElement())
             {
-                processElement(child, group_element->get_elements());
+                process_element(child, group_element->get_elements()); /* recursive call in case of nested groups  */
             }
         }
         else if (element_name == "use") 
@@ -189,7 +217,7 @@ namespace svg
                 }
             }    
         }
-        full_svg_elements.push_back(svg_element);
+        full_svg_elements.push_back(svg_element);       
         svg_elements.push_back(svg_element); 
     }
 
@@ -208,7 +236,7 @@ namespace svg
         
         for (XMLElement* child = xml_elem->FirstChildElement(); child != NULL; child = child->NextSiblingElement())
         {
-            processElement(child, svg_elements);
+            process_element(child, svg_elements);
         }
     }
 
