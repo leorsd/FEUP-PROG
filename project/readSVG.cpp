@@ -10,7 +10,8 @@ using namespace tinyxml2;
 
 namespace svg
 {   
-    std::vector<SVGElement*> full_svg_elements; // global variable to store all the elements
+    /* global variable to store all the elements*/
+    std::vector<SVGElement*> full_svg_elements;
 
     /** 
      * @brief get the type of the element by its id
@@ -67,7 +68,7 @@ namespace svg
     }
 
     /**
-     * @brief convert a string to an integer
+     * @brief convert a string with brackets to an integer
      * used in ProcessElement (rotate, scale)
      * 
      * @param int_str 
@@ -82,16 +83,18 @@ namespace svg
         return value;
     }
 
-    void processElement(XMLElement* element, vector<SVGElement *>& svg_elements)
+    void process_element(XMLElement* element, vector<SVGElement *>& svg_elements)
     {
         string element_name = element->Name();
-        SVGElement* svg_element = nullptr;               // pointer to the element to be created, in case of fault of id, errors will be avoided
-        const char* id_char = element->Attribute("id");
+        /* pointer to the element to be created; creating the element outside the if statements saves some lines */
+        SVGElement* svg_element = nullptr;
+        const char* id_char = element->Attribute("id");    
         string id;
-        if (id_char!=NULL) 
+        /* If the element doesn't have an id, id_char will be NULL */
+        if (id_char!=NULL)
         {
             id = id_char;
-        } else 
+        } else /* Default id is "undefined" */
         {
             id = "undefined";
         }
@@ -109,7 +112,7 @@ namespace svg
             top_left.y = element->IntAttribute("y");
             int width = element->IntAttribute("width");
             int height = element->IntAttribute("height");
-            Point width_and_height={width-1,height-1};      // -1 since the width and height begin in 0
+            Point width_and_height={width-1,height-1};      /* -1 because the width and height begin in 0 */
             Color fill_color=parse_color(element->Attribute("fill"));
             svg_element = new Rect(top_left, width_and_height, fill_color,id);
         }
@@ -151,13 +154,13 @@ namespace svg
             Color fill_color=parse_color(element->Attribute("stroke"));
             svg_element = new Line(start, end,fill_color,id);
         }
-        else if (element_name == "g") // group element
+        else if (element_name == "g") /* group element */
         {
             Group* group_element = new Group({},id);
             svg_element = group_element;
             for (XMLElement* child = element->FirstChildElement(); child != NULL; child = child->NextSiblingElement())
             {
-                processElement(child, group_element->get_elements()); // recursive call in case of nested groups
+                process_element(child, group_element->get_elements()); /* recursive call in case of nested groups  */
             }
         }
         else if (element_name == "use") 
@@ -233,7 +236,7 @@ namespace svg
         
         for (XMLElement* child = xml_elem->FirstChildElement(); child != NULL; child = child->NextSiblingElement())
         {
-            processElement(child, svg_elements);
+            process_element(child, svg_elements);
         }
     }
 
