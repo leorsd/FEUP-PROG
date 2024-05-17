@@ -10,14 +10,6 @@
 
 namespace svg
 {
-    class SVGElement;
-    void readSVG(const std::string &svg_file,
-                 Point &dimensions,
-                 std::vector<svg::SVGElement *> &svg_elements);
-
-    void convert(const std::string &svg_file,
-                 const std::string &png_file);
-
     /**
      * @brief Declaration of the SVGElement class
      * 
@@ -160,7 +152,7 @@ namespace svg
      * @brief Declaration of the Circle class (subclass of Ellipse)
      * 
      */
-    class Circle : public Ellipse
+    class Circle final : public Ellipse
     {
     public:
 
@@ -238,7 +230,7 @@ namespace svg
      * @brief Declaration of the Line class (subclass of Polyline)
      * 
      */
-    class Line : public Polyline
+    class Line final : public Polyline
     {
     public:
 
@@ -314,7 +306,7 @@ namespace svg
      * @brief Implementation of Rectangle class (subclass of Polygon)
      * 
      */
-    class Rect : public Polygon
+    class Rect final : public Polygon
     {
     public:
         /**
@@ -402,5 +394,12 @@ namespace svg
         private:
             std::vector<SVGElement *> elements;
     };
+
+    void readSVG(const std::string &svg_file,
+                 Point &dimensions,
+                 std::vector<svg::SVGElement *> &svg_elements);
+
+    void convert(const std::string &svg_file,
+                 const std::string &png_file);
 }
 #endif
